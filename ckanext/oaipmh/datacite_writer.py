@@ -80,7 +80,7 @@ def datacite_writer(element, metadata):
     alt_id_exists = False
 
     map = metadata.getMap()
-    for k, v in map.items():
+    for k, v in list(map.items()):
         if v:
             if k == 'version':
                 if v:

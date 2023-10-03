@@ -1,7 +1,7 @@
 # coding: utf-8
 # vi:et:ts=8:
 
-import cStringIO
+import io
 
 import oaipmh.common
 import lxml.etree
@@ -90,17 +90,17 @@ def generic_xml_metadata_reader(xml_element):
         if element.text and element.text.strip():
             result[prefix] = element.text.strip()
         for attr in element.attrib:
-            name = namespaced_name(attr, element.nsmap.items())
+            name = namespaced_name(attr, list(element.nsmap.items()))
             result['%s/@%s' % (prefix, name)] = element.attrib[attr]
         indices = {}
         for child in element:
-            name = namespaced_name(child.tag, child.nsmap.items())
+            name = namespaced_name(child.tag, list(child.nsmap.items()))
             child_path = namepath_for_element(
                 prefix, name, indices, result)
             flatten_with(child_path, child, result)
 
     result = {}
-    flatten_with(namespaced_name(xml_element.tag, xml_element.nsmap.items()),
+    flatten_with(namespaced_name(xml_element.tag, list(xml_element.nsmap.items())),
                  xml_element, result)
     return oaipmh.common.Metadata(xml_element, result)
 
@@ -145,7 +145,7 @@ def generic_rdf_metadata_reader(xml_element):
     # this is kinda stupid, but by far the easiest way:
     # rdflib uses xml.sax so it doesn't understand etree,
     # so text is the only common language spoken by lxml and rdflib
-    f = cStringIO.StringIO(etree.tostring(e, xml_declaration=True, encoding='utf-8'))
+    f = io.StringIO(etree.tostring(e, xml_declaration=True, encoding='utf-8'))
     g.parse(f, format='xml')  # publicID could be the metadata source URL
     # end stupid
 
@@ -156,7 +156,7 @@ def generic_rdf_metadata_reader(xml_element):
         path = prefix.split('/')
         if len(path) > 2 and is_reverse_relation(path[-1], path[-2]):
             return
-        result[prefix] = unicode(node)
+        result[prefix] = str(node)
         if node in visited:
             return
         visited.add(node)
@@ -177,7 +177,7 @@ def generic_rdf_metadata_reader(xml_element):
     assert len(datasets) == 1
     root_node = datasets[0]
     result = {}
-    flatten_with(u'dataset', root_node, result)
+    flatten_with('dataset', root_node, result)
     return oaipmh.common.Metadata(result)
 
 

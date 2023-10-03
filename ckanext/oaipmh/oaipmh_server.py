@@ -45,7 +45,7 @@ class CKANServer(ResumptionOAIPMH):
         try:
             json_data = json.loads(js)
             json_titles = list()
-            for key, value in json_data.items():
+            for key, value in list(json_data.items()):
                 if value:
                     json_titles.append(value)
             return json_titles
@@ -87,7 +87,7 @@ class CKANServer(ResumptionOAIPMH):
         # Loops through extras -table:
         extras = {}
         for item in package['extras']:
-            for key, value in item.items():
+            for key, value in list(item.items()):
                 key = item['key']   # extras table is constructed as key: language, value: English
                 value = item['value'] # instead of language : English, that is why it is looped here
                 extras.update( {key : value} )
@@ -154,7 +154,7 @@ class CKANServer(ResumptionOAIPMH):
         metadata = {}
         # Fixes the bug on having a large dataset being scrambled to individual
         # letters
-        for key, value in meta.items():
+        for key, value in list(meta.items()):
             if value and not isinstance(value, list):
                 metadata[str(key)] = [value]
             else:
@@ -172,7 +172,7 @@ class CKANServer(ResumptionOAIPMH):
         # Loops through extras -table:
         extras = {}
         for item in package['extras']:
-            for key, value in item.items():
+            for key, value in list(item.items()):
                 key = item['key']   # extras table is constructed as key: language, value: English
                 value = item['value']  # instead of language : English, that is why it is looped here
                 if key in ['spatial']:
@@ -245,7 +245,7 @@ class CKANServer(ResumptionOAIPMH):
         metadata = {}
         # Fixes the bug on having a large dataset being scrambled to individual
         # letters
-        for key, value in meta.items():
+        for key, value in list(meta.items()):
             if value and not isinstance(value, list):
                 metadata[str(key)] = [value]
             else:
@@ -264,7 +264,7 @@ class CKANServer(ResumptionOAIPMH):
         # Loops through extras -table:
         extras = {}
         for item in package['extras']:
-            for key, value in item.items():
+            for key, value in list(item.items()):
                 key = item['key']   # extras table is constructed as key: language, value: English
                 value = item['value']  # instead of language : English, that is why it is looped here
                 values = value.split(";")
@@ -320,12 +320,12 @@ class CKANServer(ResumptionOAIPMH):
                 'title': package.get('title', None) or package.get('name'),
                 'coverage': coverage if coverage else [], }
 
-        iters = dict(dataset.extras.items())
+        iters = dict(list(dataset.extras.items()))
         meta.update(iters)
         metadata = {}
         # Fixes the bug on having a large dataset being scrambled to individual
         # letters
-        for key, value in meta.items():
+        for key, value in list(meta.items()):
             if not isinstance(value, list):
                 metadata[str(key)] = [value]
             else:

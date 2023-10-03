@@ -11,7 +11,7 @@ from ckanext.oaipmh.cmdi_reader import CmdiReader
 from ckanext.oaipmh.datacite_reader import DataCiteReader
 from ckanext.oaipmh.oai_dc_reader import dc_metadata_reader
 
-import importcore
+from . import importcore
 
 xml_reader = importcore.generic_xml_metadata_reader
 rdf_reader = importcore.generic_rdf_metadata_reader
@@ -121,40 +121,40 @@ def nrd_metadata_reader(xml):
                 copy_element(source + '/dcat:byteSize', dest + '/size', result)
 
         mapping = [
-            (u'dataset', u'versionidentifier', None),
-            (u'dataset/nrd:continuityIdentifier', u'continuityidentifier', None),
-            (u'dataset/rev:foaf:primaryTopic.0/nrd:metadataIdentifier', u'metadata/identifier', None),
-            (u'dataset/rev:foaf:primaryTopic.0/nrd:metadataModified', u'metadata/modified', None),
-            (u'dataset/dct:title', u'title', None),
-            (u'dataset/nrd:modified', u'modified', None),
-            (u'dataset/nrd:rights', u'rights', None),
-            (u'dataset/nrd:language', u'language', None),
-            (u'dataset/nrd:owner', u'owner', person_attrs),
-            (u'dataset/nrd:creator', u'creator', person_attrs),
-            (u'dataset/nrd:distributor', u'distributor', person_attrs),
-            (u'dataset/nrd:contributor', u'contributor', person_attrs),
-            (u'dataset/nrd:subject', u'subject', None),  # fetch tags?
-            (u'dataset/nrd:producerProject', u'project', funding_attrs),
-            (u'dataset/dct:isPartOf', u'collection', document_attrs),
-            (u'dataset/dct:requires', u'requires', None),
-            (u'dataset/nrd:discipline', u'discipline', None),
-            (u'dataset/nrd:temporal', u'temporalcoverage', None),
-            (u'dataset/nrd:spatial', u'spatialcoverage', None),  # names?
-            (u'dataset/nrd:manifestation', u'resource', file_attrs),
-            (u'dataset/nrd:observationMatrix', u'variables', None),  # TODO
-            (u'dataset/nrd:usedByPublication', u'publication', document_attrs),
-            (u'dataset/dct:description', u'description', None),
+            ('dataset', 'versionidentifier', None),
+            ('dataset/nrd:continuityIdentifier', 'continuityidentifier', None),
+            ('dataset/rev:foaf:primaryTopic.0/nrd:metadataIdentifier', 'metadata/identifier', None),
+            ('dataset/rev:foaf:primaryTopic.0/nrd:metadataModified', 'metadata/modified', None),
+            ('dataset/dct:title', 'title', None),
+            ('dataset/nrd:modified', 'modified', None),
+            ('dataset/nrd:rights', 'rights', None),
+            ('dataset/nrd:language', 'language', None),
+            ('dataset/nrd:owner', 'owner', person_attrs),
+            ('dataset/nrd:creator', 'creator', person_attrs),
+            ('dataset/nrd:distributor', 'distributor', person_attrs),
+            ('dataset/nrd:contributor', 'contributor', person_attrs),
+            ('dataset/nrd:subject', 'subject', None),  # fetch tags?
+            ('dataset/nrd:producerProject', 'project', funding_attrs),
+            ('dataset/dct:isPartOf', 'collection', document_attrs),
+            ('dataset/dct:requires', 'requires', None),
+            ('dataset/nrd:discipline', 'discipline', None),
+            ('dataset/nrd:temporal', 'temporalcoverage', None),
+            ('dataset/nrd:spatial', 'spatialcoverage', None),  # names?
+            ('dataset/nrd:manifestation', 'resource', file_attrs),
+            ('dataset/nrd:observationMatrix', 'variables', None),  # TODO
+            ('dataset/nrd:usedByPublication', 'publication', document_attrs),
+            ('dataset/dct:description', 'description', None),
         ]
         for source, dest, callback in mapping:
                 copy_element(source, dest, result, callback)
         try:
-                rights = lxml.etree.XML(result[u'rights'])
+                rights = lxml.etree.XML(result['rights'])
                 rightsclass = rights.attrib['RIGHTSCATEGORY'].lower()
-                result[u'rightsclass'] = rightsclass
+                result['rightsclass'] = rightsclass
                 if rightsclass == 'licensed':
-                        result[u'license'] = rights[0].text
+                        result['license'] = rights[0].text
                 if rightsclass == 'contractual':
-                        result[u'accessURL'] = rights[0].text
+                        result['accessURL'] = rights[0].text
         except:
             pass
         return oc.Metadata(result)
